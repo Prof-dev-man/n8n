@@ -1,0 +1,59 @@
+# Use this Blueprint to deploy n8n on Render as a web
+# service that uses a Postgres database to store
+# workflow data.
+#
+# This Blueprint uses free instance types (specified by
+# `plan`) for both the web service and the database. You
+# can upgrade to paid instance types at any time to
+# increase resources.
+
+services:
+  - type: web
+    name: n8n-service
+    runtime: image
+    plan: free
+    image:
+      url: docker.io/n8nio/n8n:latest
+
+    envVars:
+      - key: DB_TYPE
+        value: postgresdb
+
+      - key: DB_POSTGRESDB_DATABASE
+        value: n8n
+      - key: DB_POSTGRESDB_HOST
+        value: dpg-d22ve8mmcj7s73d1759g-a.oregon-postgres.render.com
+      - key: DB_POSTGRESDB_USER
+        value: n8n_user
+      - key: DB_POSTGRESDB_PASSWORD
+        value: VAaDifA9xqXf1xPZUXrPo3YD6091KNkm
+      - key: DB_POSTGRESDB_PORT
+        value: "5432"
+
+      # Optional but good practice to define the host/port
+      - key: N8N_HOST
+        value: 0.0.0.0
+      - key: N8N_PORT
+        value: "5678"
+      - key: N8N_PROTOCOL
+        value: http
+
+      # Editor URL (public Render domain)
+      - key: N8N_EDITOR_BASE_URL
+        value: https://n8n-render-1fha.onrender.com
+
+      # Webhook tunnel (same as above if using public Render)
+      - key: WEBHOOK_TUNNEL_URL
+        value: https://n8n-render-1fha.onrender.com
+
+      # Basic Auth (protect access to your editor)
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: "true"
+      - key: N8N_BASIC_AUTH_USER
+        value: admin
+      - key: N8N_BASIC_AUTH_PASSWORD
+        value: Spyder11#
+
+      # Encryption key (REQUIRED - generate one and keep it secure)
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
